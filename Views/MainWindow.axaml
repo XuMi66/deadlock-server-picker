@@ -1,0 +1,126 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="DeadlockServerPicker.Views.MainWindow"
+        Title="{Binding T.AppTitle}"
+        Width="1000" Height="660" MinWidth="860" MinHeight="540"
+        Icon="/Assets/icon.ico"
+        WindowStartupLocation="CenterScreen"
+        Background="#0E1218"
+        FontFamily="Microsoft YaHei UI, Segoe UI">
+
+  <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="18,16,18,14">
+
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+      <StackPanel Spacing="4">
+        <TextBlock Text="{Binding T.AppTitle}" FontSize="22" FontWeight="SemiBold" Foreground="#EAF1FA"/>
+        <TextBlock Text="{Binding SubtitleText}" FontSize="12" Foreground="#8A97A8"/>
+      </StackPanel>
+      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+        <Border Background="#151D27" CornerRadius="8" Padding="14,8"
+                BorderBrush="#222E3C" BorderThickness="1"
+                ToolTip.Tip="{Binding T.RecommendTip}">
+          <StackPanel Spacing="1">
+            <TextBlock Text="{Binding T.CardRecommend}" FontSize="10" Foreground="#8494A7"/>
+            <TextBlock Text="{Binding RecommendRegion}" FontSize="16" FontWeight="SemiBold" Foreground="#7FB2E5"/>
+            <TextBlock Text="{Binding RecommendHint}" FontSize="10" Foreground="#6B7A8C"/>
+          </StackPanel>
+        </Border>
+        <Border Background="#151D27" CornerRadius="8" Padding="14,8"
+                BorderBrush="#222E3C" BorderThickness="1"
+                ToolTip.Tip="{Binding T.OnlineTip}">
+          <StackPanel Spacing="1">
+            <TextBlock Text="{Binding T.CardOnline}" FontSize="10" Foreground="#8494A7"/>
+            <TextBlock Text="{Binding PlayerCountText}" FontSize="18" FontWeight="SemiBold" Foreground="#4ADE80"/>
+          </StackPanel>
+        </Border>
+      </StackPanel>
+    </Grid>
+
+    <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,Auto,*,Auto" Margin="0,16,0,0">
+      <Button Command="{Binding ApplyCommand}" IsEnabled="{Binding CanExecuteCommands}"
+              Background="#2FA36B" Foreground="#04120A" FontWeight="SemiBold"
+              Padding="16,8" CornerRadius="6" Content="{Binding T.BtnApply}"/>
+      <Button Grid.Column="1" Command="{Binding ResetAllCommand}" IsEnabled="{Binding CanExecuteCommands}"
+              Padding="14,8" CornerRadius="6" Content="{Binding T.BtnReset}" Margin="8,0,0,0"/>
+      <Button Grid.Column="2" Command="{Binding RescanCommand}" IsEnabled="{Binding CanExecuteCommands}"
+              Padding="14,8" CornerRadius="6" Content="{Binding T.BtnRescan}" Margin="8,0,0,0"/>
+      <StackPanel Grid.Column="4" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+        <Button Command="{Binding ToggleLanguageCommand}" Padding="10,6" CornerRadius="6"
+                Content="{Binding T.LanguageButton}" FontSize="12"/>
+        <ToggleSwitch IsChecked="{Binding LivePingEnabled, Mode=TwoWay}"
+                      OnContent="{Binding T.LivePing}" OffContent="{Binding T.LivePing}"/>
+        <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" Width="80" Height="3" VerticalAlignment="Center"/>
+      </StackPanel>
+    </Grid>
+
+    <Border Grid.Row="2" Margin="0,14,0,0" Background="#111820" BorderBrush="#1F2A37"
+            BorderThickness="1" CornerRadius="8" ClipToBounds="True">
+      <DataGrid Name="ServersGrid" ItemsSource="{Binding Servers}"
+                AutoGenerateColumns="False"
+                GridLinesVisibility="Horizontal"
+                HorizontalGridLinesBrush="#1A2330"
+                HeadersVisibility="Column"
+                SelectionMode="Single"
+                CanUserResizeColumns="True"
+                RowHeight="42"
+                Background="Transparent"
+                BorderThickness="0">
+        <DataGrid.Columns>
+          <DataGridTemplateColumn Width="54" CanUserSort="False">
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate>
+                <Border Width="30" Height="20" CornerRadius="3" ClipToBounds="True">
+                  <Image Source="{Binding Flag}" Stretch="UniformToFill"/>
+                </Border>
+              </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+          </DataGridTemplateColumn>
+
+          <DataGridTextColumn Header="{Binding T.ColNode}" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
+
+          <DataGridTextColumn Header="{Binding T.ColRegion}" Binding="{Binding RegionName}" Width="118" IsReadOnly="True"/>
+
+          <DataGridTemplateColumn Header="{Binding T.ColPing}" Width="110" SortMemberPath="Ping">
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding PingText}" Foreground="{Binding PingBrush}"
+                           FontWeight="SemiBold" VerticalAlignment="Center"
+                           ToolTip.Tip="{Binding PingTooltip}"/>
+              </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+          </DataGridTemplateColumn>
+
+          <DataGridTemplateColumn Header="{Binding T.ColState}" Width="96" SortMemberPath="IsEnabled">
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding StateText}" Foreground="{Binding StateBrush}" VerticalAlignment="Center"/>
+              </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+          </DataGridTemplateColumn>
+
+          <DataGridTemplateColumn Width="64" CanUserSort="False">
+            <DataGridTemplateColumn.HeaderTemplate>
+              <DataTemplate>
+                <CheckBox IsChecked="{Binding $parent[Window].DataContext.IsEnabledAll, Mode=TwoWay}"
+                          HorizontalAlignment="Center"/>
+              </DataTemplate>
+            </DataGridTemplateColumn.HeaderTemplate>
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate>
+                <CheckBox IsChecked="{Binding IsEnabled, Mode=TwoWay}" HorizontalAlignment="Center"/>
+              </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+          </DataGridTemplateColumn>
+        </DataGrid.Columns>
+      </DataGrid>
+    </Border>
+
+    <Grid Grid.Row="3" Margin="0,12,0,0">
+      <StackPanel Spacing="3">
+        <TextBlock Text="{Binding StatusText}" FontSize="11" Foreground="#93A1B5"/>
+        <TextBlock Text="{Binding ErrorText}" FontSize="11" Foreground="#F58A92"
+                   IsVisible="{Binding HasError}" TextWrapping="Wrap"/>
+      </StackPanel>
+    </Grid>
+  </Grid>
+</Window>

@@ -1,0 +1,24 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DeadlockServerPicker.App"
+             RequestedThemeVariant="Dark">
+
+  <TrayIcon.Icons>
+    <TrayIcons>
+      <TrayIcon Icon="/Assets/icon.ico" ToolTipText="Deadlock 服务器选取器">
+        <TrayIcon.Menu>
+          <NativeMenu>
+            <NativeMenuItem Header="显示主界面" Click="OnTrayShow"/>
+            <NativeMenuItemSeparator/>
+            <NativeMenuItem Header="退出" Click="OnTrayExit"/>
+          </NativeMenu>
+        </TrayIcon.Menu>
+      </TrayIcon>
+    </TrayIcons>
+  </TrayIcon.Icons>
+
+  <Application.Styles>
+    <FluentTheme />
+    <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
+  </Application.Styles>
+</Application>
